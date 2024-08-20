@@ -41,11 +41,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   0001466b  00000000  00000000  0003d7b4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000f6d4d  00000000  00000000  00051e1f  2**0
+ 19 .debug_str    000f6d28  00000000  00000000  00051e1f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  000053c4  00000000  00000000  00148b6c  2**2
+ 20 .debug_frame  000053c4  00000000  00000000  00148b48  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000056  00000000  00000000  0014df30  2**0
+ 21 .debug_line_str 0000005e  00000000  00000000  0014df0c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -983,7 +983,7 @@ void SystemInit(void)
 	.weak	Reset_Handler
 	.type	Reset_Handler, %function
 Reset_Handler:
-De  ldr   sp, =_estack    /* Set stack pointer */
+  ldr   sp, =_estack    /* Set stack pointer */
  8000618:	f8df d034 	ldr.w	sp, [pc, #52]	; 8000650 <LoopForever+0x2>
 
 /* Call the clock system initialization function.*/
@@ -1060,7 +1060,7 @@ LoopFillZerobss:
 LoopForever:
     b LoopForever
  800064e:	e7fe      	b.n	800064e <LoopForever>
-De  ldr   sp, =_estack    /* Set stack pointer */
+  ldr   sp, =_estack    /* Set stack pointer */
  8000650:	20018000 	.word	0x20018000
   ldr r0, =_sdata
  8000654:	20000000 	.word	0x20000000
@@ -1182,22 +1182,15 @@ __weak uint32_t HAL_GetTick(void)
  80006d8:	200000d0 	.word	0x200000d0
 
 080006dc <__NVIC_SetPriorityGrouping>:
-           In case of a conflict between priority grouping and available
-           priority bits (__NVIC_PRIO_BITS), the smallest possible priority group is set.
-  \param [in]      PriorityGroup  Priority grouping field.
- */
-__STATIC_INLINE void __NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
 {
  80006dc:	b480      	push	{r7}
  80006de:	b085      	sub	sp, #20
  80006e0:	af00      	add	r7, sp, #0
  80006e2:	6078      	str	r0, [r7, #4]
-  uint32_t reg_value;
   uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);             /* only values 0..7 are used          */
  80006e4:	687b      	ldr	r3, [r7, #4]
  80006e6:	f003 0307 	and.w	r3, r3, #7
  80006ea:	60fb      	str	r3, [r7, #12]
-
   reg_value  =  SCB->AIRCR;                                                   /* read old register configuration    */
  80006ec:	4b0c      	ldr	r3, [pc, #48]	; (8000720 <__NVIC_SetPriorityGrouping+0x44>)
  80006ee:	68db      	ldr	r3, [r3, #12]
@@ -1207,8 +1200,6 @@ __STATIC_INLINE void __NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
  80006f4:	f64f 03ff 	movw	r3, #63743	; 0xf8ff
  80006f8:	4013      	ands	r3, r2
  80006fa:	60bb      	str	r3, [r7, #8]
-  reg_value  =  (reg_value                                   |
-                ((uint32_t)0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |
                 (PriorityGroupTmp << SCB_AIRCR_PRIGROUP_Pos)  );              /* Insert write key and priority group */
  80006fc:	68fb      	ldr	r3, [r7, #12]
  80006fe:	021a      	lsls	r2, r3, #8
@@ -1232,11 +1223,6 @@ __STATIC_INLINE void __NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
  8000720:	e000ed00 	.word	0xe000ed00
 
 08000724 <__NVIC_GetPriorityGrouping>:
-  \brief   Get Priority Grouping
-  \details Reads the priority grouping field from the NVIC Interrupt Controller.
-  \return                Priority grouping field (SCB->AIRCR [10:8] PRIGROUP field).
- */
-__STATIC_INLINE uint32_t __NVIC_GetPriorityGrouping(void)
 {
  8000724:	b480      	push	{r7}
  8000726:	af00      	add	r7, sp, #0
@@ -1253,11 +1239,6 @@ __STATIC_INLINE uint32_t __NVIC_GetPriorityGrouping(void)
  800073c:	e000ed00 	.word	0xe000ed00
 
 08000740 <__NVIC_EnableIRQ>:
-  \details Enables a device specific interrupt in the NVIC interrupt controller.
-  \param [in]      IRQn  Device specific interrupt number.
-  \note    IRQn must not be negative.
- */
-__STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
 {
  8000740:	b480      	push	{r7}
  8000742:	b083      	sub	sp, #12
@@ -1268,8 +1249,6 @@ __STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
  800074a:	f997 3007 	ldrsb.w	r3, [r7, #7]
  800074e:	2b00      	cmp	r3, #0
  8000750:	db0b      	blt.n	800076a <__NVIC_EnableIRQ+0x2a>
-  {
-    __COMPILER_BARRIER();
     NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
  8000752:	79fb      	ldrb	r3, [r7, #7]
  8000754:	f003 021f 	and.w	r2, r3, #31
@@ -1279,8 +1258,6 @@ __STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
  8000760:	2001      	movs	r0, #1
  8000762:	fa00 f202 	lsl.w	r2, r0, r2
  8000766:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
-    __COMPILER_BARRIER();
-  }
 }
  800076a:	bf00      	nop
  800076c:	370c      	adds	r7, #12
@@ -1291,11 +1268,6 @@ __STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
  8000778:	e000e100 	.word	0xe000e100
 
 0800077c <__NVIC_SetPriority>:
-  \param [in]      IRQn  Interrupt number.
-  \param [in]  priority  Priority to set.
-  \note    The priority cannot be set for every processor exception.
- */
-__STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
 {
  800077c:	b480      	push	{r7}
  800077e:	b083      	sub	sp, #12
@@ -1307,7 +1279,6 @@ __STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
  8000788:	f997 3007 	ldrsb.w	r3, [r7, #7]
  800078c:	2b00      	cmp	r3, #0
  800078e:	db0a      	blt.n	80007a6 <__NVIC_SetPriority+0x2a>
-  {
     NVIC->IP[((uint32_t)IRQn)]               = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
  8000790:	683b      	ldr	r3, [r7, #0]
  8000792:	b2da      	uxtb	r2, r3
@@ -1317,11 +1288,6 @@ __STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
  800079c:	b2d2      	uxtb	r2, r2
  800079e:	440b      	add	r3, r1
  80007a0:	f883 2300 	strb.w	r2, [r3, #768]	; 0x300
-  }
-  else
-  {
-    SCB->SHP[(((uint32_t)IRQn) & 0xFUL)-4UL] = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
-  }
 }
  80007a4:	e00a      	b.n	80007bc <__NVIC_SetPriority+0x40>
     SCB->SHP[(((uint32_t)IRQn) & 0xFUL)-4UL] = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
@@ -1345,11 +1311,6 @@ __STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
  80007cc:	e000ed00 	.word	0xe000ed00
 
 080007d0 <NVIC_EncodePriority>:
-  \param [in]   PreemptPriority  Preemptive priority value (starting from 0).
-  \param [in]       SubPriority  Subpriority value (starting from 0).
-  \return                        Encoded priority. Value can be used in the function \ref NVIC_SetPriority().
- */
-__STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t PreemptPriority, uint32_t SubPriority)
 {
  80007d0:	b480      	push	{r7}
  80007d2:	b089      	sub	sp, #36	; 0x24
@@ -1361,9 +1322,6 @@ __STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t P
  80007dc:	68fb      	ldr	r3, [r7, #12]
  80007de:	f003 0307 	and.w	r3, r3, #7
  80007e2:	61fb      	str	r3, [r7, #28]
-  uint32_t PreemptPriorityBits;
-  uint32_t SubPriorityBits;
-
   PreemptPriorityBits = ((7UL - PriorityGroupTmp) > (uint32_t)(__NVIC_PRIO_BITS)) ? (uint32_t)(__NVIC_PRIO_BITS) : (uint32_t)(7UL - PriorityGroupTmp);
  80007e4:	69fb      	ldr	r3, [r7, #28]
  80007e6:	f1c3 0307 	rsb	r3, r3, #7
@@ -1381,8 +1339,6 @@ __STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t P
  80007fe:	e000      	b.n	8000802 <NVIC_EncodePriority+0x32>
  8000800:	2300      	movs	r3, #0
  8000802:	617b      	str	r3, [r7, #20]
-
-  return (
            ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
  8000804:	f04f 32ff 	mov.w	r2, #4294967295
  8000808:	69bb      	ldr	r3, [r7, #24]
@@ -1401,7 +1357,6 @@ __STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t P
  8000826:	400b      	ands	r3, r1
            ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
  8000828:	4313      	orrs	r3, r2
-         );
 }
  800082a:	4618      	mov	r0, r3
  800082c:	3724      	adds	r7, #36	; 0x24
