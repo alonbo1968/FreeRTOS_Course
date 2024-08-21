@@ -67,4 +67,9 @@ local.properties
 # Spring Boot Tooling
 .sts4-cache/
 
+
+#Addition by Alon B.
+*.pdom
+*.log
+
 # End of https://www.toptal.com/developers/gitignore/api/eclipse
