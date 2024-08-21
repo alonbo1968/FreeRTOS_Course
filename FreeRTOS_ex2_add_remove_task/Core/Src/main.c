@@ -271,16 +271,9 @@ void StartTask01(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	//HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     Task02Handle = osThreadNew(StartTask02, NULL, &Task02_attributes);//Create task2
 	task_action('1');
 	osDelay(1000);
-
-	//priority = osThreadGetPriority(Task02Handle);
-	//task_action('1');
-    //osThreadSetPriority(Task02Handle, priority + 1);
-    //osDelay(1000);
-    //HAL_Delay(1000);
   }
   /* USER CODE END 5 */
 }
