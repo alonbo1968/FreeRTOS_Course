@@ -51,11 +51,14 @@ const osThreadAttr_t Task01_attributes = {
 };
 /* Definitions for Task02 */
 osThreadId_t Task02Handle;
-const osThreadAttr_t Task02_attributes = {
+/* Task2 attribute will be initialized in Task1
+  const osThreadAttr_t Task02_attributes = {
   .name = "Task02",
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+*/
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -131,7 +134,7 @@ int main(void)
   Task01Handle = osThreadNew(StartTask01, NULL, &Task01_attributes);
 
   /* creation of Task02 */
-  Task02Handle = osThreadNew(StartTask02, NULL, &Task02_attributes);
+  //Task02Handle = osThreadNew(StartTask02, NULL, &Task02_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -269,7 +272,7 @@ void StartTask01(void *argument)
   for(;;)
   {
 	//HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
-    Task02Handle = osThreadNew(StartTask02, NULL, &Task02_attributes);
+    Task02Handle = osThreadNew(StartTask02, NULL, &Task02_attributes);//Create task2
 	task_action('1');
 	osDelay(1000);
 
@@ -298,8 +301,8 @@ void StartTask02(void *argument)
   for(;;)
   {
 	task_action('2');
-	osThreadTerminate(Task02Handle);
-	task_action('x');
+	osThreadTerminate(Task02Handle);//Terminate the task
+	task_action('x'); //This line should not be executed because the task is already terminated
   }
   /* USER CODE END StartTask02 */
 }
