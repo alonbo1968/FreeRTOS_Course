@@ -133,7 +133,6 @@ int main(void)
   Task1Handle = osThreadNew(StartTask1, NULL, &Task1_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  EventGroup1 = osEventFlagsNew(NULL);
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
@@ -269,7 +268,7 @@ void StartTask1(void *argument)
 {
   /* USER CODE BEGIN 5 */
 	/* Note! Timer initialization from an Interrupt is not allowed */
-	osTimerStart(myTimer01Handle, 1000);
+	osTimerStart(myTimer01Handle, 100);
   /* Infinite loop */
   for(;;)
   {
@@ -287,8 +286,11 @@ void StartTask1(void *argument)
 void Callback01(void *argument)
 {
   /* USER CODE BEGIN Callback01 */
-	/* No Blocking Functions are allowed in a Timer calback function!!! */
+	/* No Blocking Functions are allowed in a Timer callback function!!! */
+	/* The callback function should be short */
+	/* The callback priority should be High enough */
 	task_action('c');
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
   /* USER CODE END Callback01 */
 }
 
