@@ -304,7 +304,9 @@ void StartReceive(void *argument)
   for(;;)
   {
 	task_action('R');
-	r_state = osMessageQueueGet(Queue1Handle, &rec, NULL, osWaitForever);
+	//r_state = osMessageQueueGet(Queue1Handle, &rec, NULL, osWaitForever);
+	//For Demo purpose: Set Timeout=500 to generate a Timeout error
+	r_state = osMessageQueueGet(Queue1Handle, &rec, NULL, 500);
 	task_action(rec + 48);
   }
   /* USER CODE END StartReceive */
