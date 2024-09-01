@@ -275,6 +275,12 @@ void task_action(char message)
 	ITM_SendChar('\n');
 }
 
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	osSemaphoreRelease(myCountingSem01Handle);
+	task_action('!');
+}
+
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartTask1 */
