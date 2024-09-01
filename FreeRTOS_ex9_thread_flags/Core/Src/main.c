@@ -273,9 +273,12 @@ void StartTask1(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	//HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
 	for(;;)
 	{
+		/* Note that the Events are not cleared because of osFlagsNoClear. */
+		/* So at first time the task is unblocked after both events from   */
+		/* task2 and the Interrupt. But later on, task1 is can unblock    */
+		/* by task2 */
 	  osThreadFlagsWait(0x51, osFlagsWaitAll, osWaitForever);
 	  task_action('1');
 	}
