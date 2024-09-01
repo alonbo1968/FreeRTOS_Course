@@ -162,7 +162,6 @@ int main(void)
   Task3Handle = osThreadNew(StartTask3, NULL, &Task3_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  EventGroup1 = osEventFlagsNew(NULL);
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
@@ -302,16 +301,17 @@ void StartTask1(void *argument)
   for(;;)
   {
 	  //osDelay(2000);
-	  //osMutexAcquire(myMutex01Handle, osWaitForever);
-	  osSemaphoreAcquire(myBinarySem01Handle, osWaitForever);
+	  osMutexAcquire(myMutex01Handle, osWaitForever);
+	  //osSemaphoreAcquire(myBinarySem01Handle, osWaitForever);
 
 	  task_action('1');
 	  if(index++ >= 3)
 	  {
+		  //Lower task priority after 3 times */
 		  osThreadSetPriority(Task1Handle, osPriorityLow);
 	  }
-	  //osMutexRelease(myMutex01Handle);
-	  osSemaphoreRelease(myBinarySem01Handle);
+	  osMutexRelease(myMutex01Handle);//Reach here after priority lowered thanks to Mutex Priority Inheritance
+	  //osSemaphoreRelease(myBinarySem01Handle);//Not Reach here after priority lowered because Semaphore does not have Priority Inheritance
 	  HAL_Delay(500);
   }
   /* USER CODE END 5 */
@@ -331,12 +331,12 @@ void StartTask2(void *argument)
   for(;;)
   {
 	  //osDelay(2000);
-	  //osMutexAcquire(myMutex01Handle, osWaitForever);
-	  osSemaphoreAcquire(myBinarySem01Handle, osWaitForever);
+	  osMutexAcquire(myMutex01Handle, osWaitForever);
+	  //osSemaphoreAcquire(myBinarySem01Handle, osWaitForever);
 
 	  task_action('2');
-	  //osMutexRelease(myMutex01Handle);
-	  osSemaphoreRelease(myBinarySem01Handle);
+	  osMutexRelease(myMutex01Handle);
+	  //osSemaphoreRelease(myBinarySem01Handle);
 	  HAL_Delay(500);
   }
   /* USER CODE END StartTask2 */
